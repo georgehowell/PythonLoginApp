@@ -16,7 +16,6 @@ import questionary
 users_csv_file = 'users.csv'
 data = {i[0]:i[1:] for i in csv.reader(open(users_csv_file))}
 min_pw_len = 10
-enterTotalTimes = 3
 myDict = {
     0: "Hello ",
     1: "Password must be at least 10 characters",
@@ -65,6 +64,7 @@ while(valid == False):
 
         while True:
             for x in range(1, 4):
+                enterTotalTimes = 3
                 triesLeftTimes = enterTotalTimes - x
                 password = questionary.password(myDict[5], validate=password_validator).ask() # § use fn "password_validator()"
                 if password in data[username]:
