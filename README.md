@@ -11,4 +11,7 @@ Login System with 'Register', validation, and password generator
 `python -m unittest`
 
 #### when: "import pytest"
-`python3 -m pytest`
+`python -m pytest`
+
+#### Test the Validator Class:
+`pytest test_validator.py`

@@ -1,6 +1,6 @@
 class Validator:
     def username_is_valid(self, username):
-        if len(username) > 10:
+        if len(username) >= 10:
             return False
         
         if ' ' in username:
