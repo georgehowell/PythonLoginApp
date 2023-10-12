@@ -38,12 +38,6 @@ myDict = {
     18: "Password must have at least one capital letter",
     19: "Password must contain a number"
           }
-lower = string.ascii_lowercase
-upper = string.ascii_uppercase
-num = string.digits
-symbols = string.punctuation
-required = set(c for c in '0123456789a...zA...Z~!@#$%^&*()_+')
-
 valid = False
 
 # - - - - - - - - - - - - - -  classes:  - - - - - - - - - - - - - - -
@@ -52,16 +46,14 @@ valid = False
 # - - - - - - - - - - - - - - functions: - - - - - - - - - - - - - - -
 # password_validator:
 def password_validator(password):
-    if len(password) < min_pw_len and re.fullmatch(r'[A-Za-z0-9@#$%^&+=]{8,}', password):
-        return 'Your password must conform to security policies'
-    # if len(password) < min_pw_len:
-    #     return myDict[1]
-    # if re.fullmatch(r'[@#$%^&+=]{8,}', password):
-    #     return myDict[17]
-    # if re.fullmatch(r'[A-Z]{8,}', password):
-    #     return myDict[18]
-    # if re.fullmatch(r'[0-9]{8,}', password):
-    #     return myDict[19]
+    if not re.search(r'[@#$%^&+=]', password):
+        return "Password must have at least one special character"
+    elif not re.search(r'[A-Z]', password):
+        return "Password must have at least one capital letter"
+    elif not re.search(r'[0-9]', password):
+        return "Password must contain a number"
+    elif len(password) < min_pw_len:
+        return "Password must be at least 10 characters"
     else:
         return True
     
@@ -140,6 +132,10 @@ while(valid == False):
                                 continue
                             elif length >= min_pw_len:
                                 valid = True
+                                lower = string.ascii_lowercase
+                                upper = string.ascii_uppercase
+                                num = string.digits
+                                symbols = string.punctuation
                                 all  = lower + upper + num + symbols
                                 temp =  random.sample(all, length)
                                 password = ''.join(temp)
