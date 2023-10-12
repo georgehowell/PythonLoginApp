@@ -10,7 +10,7 @@ from csv import writer
 import string
 import random
 import questionary
-
+import re
 
 # - - - - - - - -  - - - - global variables: - - - - - - - - - - - - -
 users_csv_file = 'users.csv'
@@ -33,8 +33,17 @@ myDict = {
     13: "Not a valid response",
     14: "Please enter your first name: ",
     15: "Please enter your last name: ",
-    16: "Goodbye!"
+    16: "Goodbye!",
+    17: "Password must have at least one special character",
+    18: "Password must have at least one capital letter",
+    19: "Password must contain a number"
           }
+lower = string.ascii_lowercase
+upper = string.ascii_uppercase
+num = string.digits
+symbols = string.punctuation
+required = set(c for c in '0123456789a...zA...Z~!@#$%^&*()_+')
+
 valid = False
 
 # - - - - - - - - - - - - - -  classes:  - - - - - - - - - - - - - - -
@@ -43,10 +52,19 @@ valid = False
 # - - - - - - - - - - - - - - functions: - - - - - - - - - - - - - - -
 # password_validator:
 def password_validator(password):
-    if len(password) < min_pw_len:
-        return myDict[1]
+    if len(password) < min_pw_len and re.fullmatch(r'[A-Za-z0-9@#$%^&+=]{8,}', password):
+        return 'Your password must conform to security policies'
+    # if len(password) < min_pw_len:
+    #     return myDict[1]
+    # if re.fullmatch(r'[@#$%^&+=]{8,}', password):
+    #     return myDict[17]
+    # if re.fullmatch(r'[A-Z]{8,}', password):
+    #     return myDict[18]
+    # if re.fullmatch(r'[0-9]{8,}', password):
+    #     return myDict[19]
     else:
         return True
+    
 
 # - - - - - - - - - - - - - - - the code - - - - - - - - - - - - - - -
 # 1. Login: is the user registered (Y(1) or N(1))
@@ -66,13 +84,27 @@ while(valid == False):
             for x in range(1, 4):
                 enterTotalTimes = 3
                 triesLeftTimes = enterTotalTimes - x
-                password = questionary.password(myDict[5], validate=password_validator).ask() # § use fn "password_validator()"
-                if password in data[username]:
+                password = questionary.password(myDict[5]).ask() # § use fn "password_validator()"
+                
+                if password == data[username][0]:
                     # Welcome to Gelos Software Design Website
                     print(myDict[0] + username + myDict[6])
                     exit()
                 if triesLeftTimes == 0:
-                    print("You have no more attempts! Goodbye.")
+                    new_password = questionary.password("You need to reset your password. Enter a new one now: ", validate=password_validator).ask()
+
+                    with open(users_csv_file, 'r') as file:
+                        csv_reader = csv.reader(file)
+                        rows = list(csv_reader)
+                        for row in rows:
+                            if row[0] == username:
+                                row[1] = new_password
+
+                    with open(users_csv_file, 'w', newline='') as file:
+                        csv_writer = csv.writer(file)
+                        csv_writer.writerows(rows)
+
+                    print(myDict[0] + username + myDict[6])
                     exit()
                 else:    
                     print("Incorrect password. You have " + str(triesLeftTimes) + " attempts left.")
@@ -108,14 +140,9 @@ while(valid == False):
                                 continue
                             elif length >= min_pw_len:
                                 valid = True
-                                lower = string.ascii_lowercase
-                                upper = string.ascii_uppercase
-                                num = string.digits
-                                symbols = string.punctuation
                                 all  = lower + upper + num + symbols
                                 temp =  random.sample(all, length)
                                 password = ''.join(temp)
-                                # print(password)  # W O R K S ! ! !
                                 break
                         except ValueError:
                             print("Amount must be a number")
