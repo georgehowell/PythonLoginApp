@@ -11,6 +11,7 @@ import string
 import random
 import questionary
 import re
+import webbrowser
 
 # - - - - - - - -  - - - - global variables: - - - - - - - - - - - - -
 users_csv_file = 'users.csv'
@@ -37,7 +38,7 @@ myDict = {
     17: "Password must have at least one special character",
     18: "Password must have at least one capital letter",
     19: "Password must contain a number"
-          }
+}
 valid = False
 
 # - - - - - - - - - - - - - -  classes:  - - - - - - - - - - - - - - -
@@ -47,13 +48,13 @@ valid = False
 # password_validator:
 def password_validator(password):
     if not re.search(r'[@#$%^&+=]', password):
-        return "Password must have at least one special character"
+        return myDict[17]
     elif not re.search(r'[A-Z]', password):
-        return "Password must have at least one capital letter"
+        return myDict[18]
     elif not re.search(r'[0-9]', password):
-        return "Password must contain a number"
+        return myDict[19]
     elif len(password) < min_pw_len:
-        return "Password must be at least 10 characters"
+        return myDict[1]
     else:
         return True
     
@@ -76,14 +77,15 @@ while(valid == False):
             for x in range(1, 4):
                 enterTotalTimes = 3
                 triesLeftTimes = enterTotalTimes - x
-                password = questionary.password(myDict[5]).ask() # § use fn "password_validator()"
+                password = questionary.password(myDict[5]).ask()
                 
                 if password == data[username][0]:
                     # Welcome to Gelos Software Design Website
                     print(myDict[0] + username + myDict[6])
+                    webbrowser.open('https://https://github.com/georgehowell/PythonLoginApp/public_html/index.html')
                     exit()
                 if triesLeftTimes == 0:
-                    new_password = questionary.password("You need to reset your password. Enter a new one now: ", validate=password_validator).ask()
+                    new_password = questionary.password("You need to reset your password. Enter a new one now: ", validate=password_validator).ask() # § use fn "password_validator()" from the "Validator" class
 
                     with open(users_csv_file, 'r') as file:
                         csv_reader = csv.reader(file)
@@ -146,7 +148,7 @@ while(valid == False):
 
                     # User wants to use their own password:
                     elif choice3 == "n" or choice3 == "N":
-                        password = questionary.password(myDict[5], validate=password_validator).ask() # § use fn "password_validator()"
+                        password = questionary.password(myDict[5], validate=password_validator).ask() # § use fn "password_validator()" from the "Validator" class
                         break
 
                     else:
@@ -171,6 +173,7 @@ while(valid == False):
                     f_object.close()
                 # Welcome to Gelos Software Design Website
                 print(myDict[0] + firstname + myDict[6])
+                webbrowser.open('https://https://github.com/georgehowell/PythonLoginApp/public_html/index.html')
                 exit()
 
             # User doesn't want to SignUp (GoodBye)

@@ -1,6 +1,7 @@
 # 1. Import the necessary modules and classes for testing:
 import pytest
 from classes.validator import Validator
+from classes.userinput import UserInput  # un-comment this @stage2
 import mock
 # import requests
 import csv
@@ -10,57 +11,62 @@ import questionary
 users_csv_file = 'users.csv'
 data = {i[0]:i[1:] for i in csv.reader(open(users_csv_file))}
 min_pw_len = 10
+myDict = {
+    0: "Hello ",
+    1: "Password must be at least 10 characters",
+    2: 'Are you a Registered User ("y" or "n")',
+    3: "Please provide your username: ",
+    4: "That username does not exist. Please try again",
+    5: "Please provide your password: ",
+    6: ". Welcome to Gelos Software Design Website.",
+}
 
 username = "Testing1234"  # comment this stage2
 
-def password_validator(password):
-    if len(password) < min_pw_len:
-        return "Password must be at least 10 characters"
-    else:
-        return True
-
-class UserInput:
-    def __init__(self, inputs):
-        self.inputs = inputs
-        self.index = 0
-
-    def input(self, prompt):
-        value = self.inputs[self.index]
-        self.index += 1
-        return value
 
 # def main_logic(user_input):
-    # data = {
-    #     "username1": ["password1"],
-    #     "username2": ["password2"],
-    # }
+#     data = {
+#         "username1": ["password1"],
+#         "username2": ["password2"],
+#     }
 
-    # while True:
-        # username = user_input.input("Please provide your username: ")
-        # if username in data:
-        #     break
-        # else:
-        #     print("That username does not exist. Please try again")
-        #     continue
+#     while True:
+#         username = user_input.input("Please provide your username: ")
+#         if username in data:
+#             return None
+#         else:
+#             print("That username does not exist. Please try again")
+#             return None
 
-def main_logic():
-
+def main_logic():    
     while True:
         for x in range(1, 4):
             enterTotalTimes = 3
             triesLeftTimes = enterTotalTimes - x
-            password = questionary.password("Please provide your password: ", validate=password_validator).ask() 
-            if password in data[username]:
-                print( "Hello " + username + ". Welcome to Gelos Software Design Website.")
+            password = questionary.password(myDict[5]).ask()
+            
+            if password == data[username][0]:
+                # Welcome to Gelos Software Design Website
+                print(myDict[0] + username + myDict[6])
                 return None
-
             if triesLeftTimes == 0:
-                print("You have no more attempts! Goodbye.")
+                new_password = questionary.password("You need to reset your password. Enter a new one now: ", validate=Validator.password_validator).ask() # § use fn "password_validator()" from the "Validator" class
+
+                with open(users_csv_file, 'r') as file:
+                    csv_reader = csv.reader(file)
+                    rows = list(csv_reader)
+                    for row in rows:
+                        if row[0] == username:
+                            row[1] = new_password
+
+                with open(users_csv_file, 'w', newline='') as file:
+                    csv_writer = csv.writer(file)
+                    csv_writer.writerows(rows)
+
+                print(myDict[0] + username + myDict[6])
                 return None
-                    
-            else:
+            else:    
                 print("Incorrect password. You have " + str(triesLeftTimes) + " attempts left.")
-    
 
 
 # 2. Define a fixture to mock the `questionary.password` function:
@@ -90,10 +96,11 @@ def test_username_is_valid():
 # 4. Write test cases for the `password_validator` function:
 def test_password_validator():
     validator = Validator()
-    assert validator.password_validator('Testing1234') == True
-    assert validator.password_validator('LongPassWord') == True
+    assert validator.password_validator('Testing@1234') == True
+    assert validator.password_validator('LongPa$$Word1234') == True
     assert validator.password_validator(' ') == False
     assert validator.password_validator('1234567') == False
+    assert validator.password_validator('abcdefghijk') == False
 
 
 # 5a. Write test cases for the main logic using the mocked `user_input.input` function:
@@ -114,7 +121,7 @@ def test_password_validator():
 
 # 5b. Write test cases for the main logic using the mocked `questionary.password` function:
 def test_main_logic(mock_password):
-    mock_password.return_value.ask.return_value = 'Testing1234'
+    mock_password.return_value.ask.return_value = 'Testing@1234'
     assert main_logic() == None
 
     mock_password.return_value.ask.return_value = 'wrongpassword'

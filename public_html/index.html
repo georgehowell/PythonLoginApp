@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gelos Software Design</title>
+    <style>
+        body {background-color: #ffedb2; text-align: center;margin:0; height: 90vh;}
+        div.animation{position: absolute; height: 100vh !important; top: -20px}
+        img.animation {width:150px;height:150px}
+        
+        .x{animation:13s linear infinite alternate x}.y{animation:7s linear infinite alternate y}
+        @keyframes x{100%{transform:translateX(calc(100vw - 150px))}}
+        @keyframes y{100%{transform:translateY(calc(100vh - 150px))}}
+        .wrapper {width: 40%; margin: 20px auto}
+        img {width: 100%; margin: 20px auto;}
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <img src="img/Logo.webp" alt="Gelos Software Design">
+        <img src="img/headline.webp" alt="Gelos Software Design ">    
+    </div>
+
+    <div class="animation x">
+        <img class="animation y" src="img/PythonLogo.webp" alt="Python" />
+      </div>
+      
+</body>
+</html>
