@@ -82,7 +82,7 @@ while(valid == False):
                 if password == data[username][0]:
                     # Welcome to Gelos Software Design Website
                     print(myDict[0] + username + myDict[6])
-                    webbrowser.open('https://https://github.com/georgehowell/PythonLoginApp/public_html/index.html')
+                    webbrowser.open('https://georgehowell.art/gelos_python_demo/')
                     exit()
                 if triesLeftTimes == 0:
                     new_password = questionary.password("You need to reset your password. Enter a new one now: ", validate=password_validator).ask() # § use fn "password_validator()" from the "Validator" class
@@ -173,7 +173,7 @@ while(valid == False):
                     f_object.close()
                 # Welcome to Gelos Software Design Website
                 print(myDict[0] + firstname + myDict[6])
-                webbrowser.open('https://https://github.com/georgehowell/PythonLoginApp/public_html/index.html')
+                webbrowser.open('https://georgehowell.art/gelos_python_demo/')
                 exit()
 
             # User doesn't want to SignUp (GoodBye)
