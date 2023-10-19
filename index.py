@@ -9,9 +9,13 @@ import csv
 from csv import writer
 import string
 import random
+
+# used to hide password and secret question anser:
 import questionary
+
 import re
 import webbrowser
+
 
 # - - - - - - - -  - - - - global variables: - - - - - - - - - - - - -
 users_csv_file = 'users.csv'
@@ -57,7 +61,31 @@ def password_validator(password):
         return myDict[1]
     else:
         return True
-    
+
+# ask security question:
+'''def ask_sec_question(**kwargs):
+    security_question = questionary.select(
+        action1 = (
+        questionary.select(
+            "Select a security question: ",
+            choices=[
+                "In what city were you born?",
+                "What is the name of your favorite pet?",
+                "What is your mother's maiden name?",
+                "What high school did you attend?",
+                "What was the name of your favourite teacher?",
+                "What was the make and model of your first car?",
+                ],
+            ).ask()
+            or "do nothing"
+        ),
+        action2 = (
+            questionary.password("Type your answer: ").ask()
+        ),
+        **kwargs,
+    )
+    return security_question.ask'''
+
 
 # - - - - - - - - - - - - - - - the code - - - - - - - - - - - - - - -
 # 1. Login: is the user registered (Y(1) or N(1))
@@ -157,8 +185,29 @@ while(valid == False):
                 # 5. Input Firstname, Input Lastname. Then write to CSV file:
                 firstname = input("Please enter your First name: ")
                 lastname = input("Please enter your last name: ")
+                if __name__ == "__main__":
+                    action1 = (
+                        questionary.select(
+                            "Select a security question: ",
+                            choices=[
+                                "In what city were you born?",
+                                "What is the name of your favorite pet?",
+                                "What is your mother's maiden name?",
+                                "What high school did you attend?",
+                                "What was the name of your favourite teacher?",
+                                "What was the make and model of your first car?",
+                                ],
+                        ).ask()
+                        or myDict[13]
+                    ),
+                    action2 = (
+                        questionary.password("Type your answer: ").ask()
+                )
+                security_question = {action1, action2}
+                
 
-                List = [username, password, firstname, lastname]
+
+                List = [username, password, firstname, lastname, security_question]
                 # Open our existing CSV file in append mode
                 # Create a file object for this file
                 with open(users_csv_file, 'a') as f_object:
