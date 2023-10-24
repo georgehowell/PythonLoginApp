@@ -10,9 +10,8 @@ from csv import writer
 import string
 import random
 
-# used to hide password and secret question anser:
+# used to hide password and secret question answer:
 import questionary
-
 import re
 import webbrowser
 
@@ -61,31 +60,6 @@ def password_validator(password):
         return myDict[1]
     else:
         return True
-
-# ask security question:
-'''def ask_sec_question(**kwargs):
-    security_question = questionary.select(
-        action1 = (
-        questionary.select(
-            "Select a security question: ",
-            choices=[
-                "In what city were you born?",
-                "What is the name of your favorite pet?",
-                "What is your mother's maiden name?",
-                "What high school did you attend?",
-                "What was the name of your favourite teacher?",
-                "What was the make and model of your first car?",
-                ],
-            ).ask()
-            or "do nothing"
-        ),
-        action2 = (
-            questionary.password("Type your answer: ").ask()
-        ),
-        **kwargs,
-    )
-    return security_question.ask'''
-
 
 # - - - - - - - - - - - - - - - the code - - - - - - - - - - - - - - -
 # 1. Login: is the user registered (Y(1) or N(1))
@@ -204,7 +178,6 @@ while(valid == False):
                         questionary.password("Type your answer: ").ask()
                 )
                 security_question = {action1, action2}
-                
 
 
                 List = [username, password, firstname, lastname, security_question]

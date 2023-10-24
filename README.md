@@ -30,3 +30,8 @@ Login System with 'Register', validation, and password generator
 #### Run 
 `pytest --cov --cov-report=html:coverage_re`
 then open html file to see
+
+### Debugging:
+`python -m pdb index.py`
+
+
