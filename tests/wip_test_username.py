@@ -66,7 +66,7 @@ def main_logic(UserInput):
 @pytest.fixture
 def mock_user_input():
     validator = Validator()
-    with MagicMock(validator.username_is_valid) as mock_usr:
+    with Mock(validator.username_is_valid) as mock_usr:
         mock_usr.return_value.input.side_effect = ['username1', 'password1']
         yield mock_usr
 

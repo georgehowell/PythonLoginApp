@@ -2,7 +2,7 @@
 import pytest
 from classes.validator import Validator
 from classes.userinput import UserInput  # un-comment this @stage2
-import mock
+from unittest import mock
 # import requests
 import csv
 import questionary

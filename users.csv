@@ -1,5 +1,6 @@
-username, password, FirstName, LastName,
-Test,Te$ting123, Joe, Blow,
-Testing1234,Testing@1234, Test, Test,
-GeoHow,u@g'<S/p^C5G.%ny}_`M*o8daK~Z6P|Aq,Geo,How,"{('In what city were you born?',), 'Sydney'}"
-geohow2,asdfasdf@W1,Geo,How,"{'Pius', ('What high school did you attend?',)}"
+username, password, FirstName, LastName, SecretQuestionAnswer, SecretQuestion
+Test,Te$ting123, Joe, Blow," ""{'Sydney'", ('In what city were you born?',")}"""
+Testing1234,wrongpassword, Test, Test," ""{'Sydney'", ('In what city were you born?',")}"""
+GeoHow,u@g'<S/p^C5G.%ny}_`M*o8daK~Z6P|Aq,Geo,How,"{'Sydney', ('In what city were you born?',)}"
+geohow2,GeoH0w#1234,Geo,How,"{'Pius', ('What high school did you attend?',)}"
+foobar,"PX$OMmvb1^yC)G*""jlVr!T",Foo,Bar,"{'Ben', ('What is the name of your favorite pet?',)}"

@@ -9,11 +9,11 @@ import csv
 from csv import writer
 import string
 import random
+import re
+import webbrowser
 
 # used to hide password and secret question answer:
 import questionary
-import re
-import webbrowser
 
 
 # - - - - - - - -  - - - - global variables: - - - - - - - - - - - - -
@@ -60,6 +60,14 @@ def password_validator(password):
         return myDict[1]
     else:
         return True
+    
+def get_values(lst, key):
+    result = []
+    for dictionary in lst:
+        if key in dictionary:
+            result.append(dictionary[key])
+    return result
+
 
 # - - - - - - - - - - - - - - - the code - - - - - - - - - - - - - - -
 # 1. Login: is the user registered (Y(1) or N(1))
@@ -87,21 +95,31 @@ while(valid == False):
                     webbrowser.open('https://georgehowell.art/gelos_python_demo/')
                     exit()
                 if triesLeftTimes == 0:
-                    new_password = questionary.password("You need to reset your password. Enter a new one now: ", validate=password_validator).ask() # § use fn "password_validator()" from the "Validator" class
+                    anwser = data[username][3]
+                    input_anwser = input("Please enter the answer to your security question: ")
+                    clean_answer = ""
+                    for char in input_anwser:
+                        if char not in string.punctuation:
+                            clean_answer += char
+                    if (input_anwser == clean_answer):
+                        new_password = questionary.password("You need to reset your password. Enter a new one now: ", validate=password_validator).ask() # § use fn "password_validator()" from the "Validator" class
 
-                    with open(users_csv_file, 'r') as file:
-                        csv_reader = csv.reader(file)
-                        rows = list(csv_reader)
-                        for row in rows:
-                            if row[0] == username:
-                                row[1] = new_password
+                        with open(users_csv_file, 'r') as file:
+                            csv_reader = csv.reader(file)
+                            rows = list(csv_reader)
+                            for row in rows:
+                                if row[0] == username:
+                                    row[1] = new_password
 
-                    with open(users_csv_file, 'w', newline='') as file:
-                        csv_writer = csv.writer(file)
-                        csv_writer.writerows(rows)
+                        with open(users_csv_file, 'w', newline='') as file:
+                            csv_writer = csv.writer(file)
+                            csv_writer.writerows(rows)
 
-                    print(myDict[0] + username + myDict[6])
-                    exit()
+                        print(myDict[0] + username + myDict[6])
+                        exit()
+                        
+                    else:
+                        print("Incorrect Answer! Try again later.")
                 else:    
                     print("Incorrect password. You have " + str(triesLeftTimes) + " attempts left.")
 
