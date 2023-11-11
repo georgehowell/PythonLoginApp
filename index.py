@@ -18,8 +18,10 @@ import questionary
 
 # - - - - - - - -  - - - - global variables: - - - - - - - - - - - - -
 users_csv_file = 'users.csv'
+#open the users.csv file, excluding the header:
 data = {i[0]:i[1:] for i in csv.reader(open(users_csv_file))}
 min_pw_len = 10
+# replace error messages, input text, warning messages, and other text with dictionary values, so as to "d.r.y.""
 myDict = {
     0: "Hello ",
     1: "Password must be at least 10 characters",
