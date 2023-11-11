@@ -5,16 +5,25 @@
 # Login System with 'Register', validation, and password generator
 
 # - - - - - - - - - - - - - - -Libraries - - - - - - - - - - - - - - -
+# read/write to CSV file:
 import csv
 from csv import writer
+
+# use string operations for defining ascii constants,  
 import string
+
+# Generate pseudo-random characters for our password_generator():
 import random
+
+# import regular expressions for use in password_validator():
 import re
-import webbrowser
 
 # used to hide password and secret question answer:
 import questionary
 
+# when user is successfully logged in:
+# create Session and open a URL in Browser:
+import webbrowser
 
 # - - - - - - - -  - - - - global variables: - - - - - - - - - - - - -
 users_csv_file = 'users.csv'
@@ -44,6 +53,12 @@ myDict = {
 }
 valid = False
 
+# by creating a SESSION, cookies will be managed automatically:
+# mySession = requests.session()
+protected_url = 'https://georgehowell.art/gelos_python_demo/'
+login_url = 'http://localhost:5000/login'
+
+
 # - - - - - - - - - - - - - -  classes:  - - - - - - - - - - - - - - -
 
 
@@ -60,13 +75,20 @@ def password_validator(password):
         return myDict[1]
     else:
         return True
-    
-def get_values(lst, key):
-    result = []
-    for dictionary in lst:
-        if key in dictionary:
-            result.append(dictionary[key])
-    return result
+
+# create a Session if the user is Successfully Logged in:
+def create_session(username, password):
+    ## TO DO: values replaced by acutal username and password variable:
+    login_data = {'username': username, 'password': password }
+    # use the SESSION object:
+    res = mySession.post(login_url, json=login_data)
+    saved_cookies = res.cookies
+    print(saved_cookies)
+    res = mySession.get(protected_url)
+    if res.json().get('access'):
+        print("Access has been granted!")
+    else:
+        print("ACCESS DENIED")
 
 
 # - - - - - - - - - - - - - - - the code - - - - - - - - - - - - - - -
@@ -92,7 +114,8 @@ while(valid == False):
                 if password == data[username][0]:
                     # Welcome to Gelos Software Design Website
                     print(myDict[0] + username + myDict[6])
-                    webbrowser.open('https://georgehowell.art/gelos_python_demo/')
+                    # create_session(username, password)
+                    webbrowser.open(protected_url)
                     exit()
                 if triesLeftTimes == 0:
                     anwser = data[username][3]
@@ -213,7 +236,8 @@ while(valid == False):
                     f_object.close()
                 # Welcome to Gelos Software Design Website
                 print(myDict[0] + firstname + myDict[6])
-                webbrowser.open('https://georgehowell.art/gelos_python_demo/')
+                # create_session(username, password)
+                webbrowser.open(protected_url)
                 exit()
 
             # User doesn't want to SignUp (GoodBye)
