@@ -50,16 +50,23 @@ valid = False
 # - - - - - - - - - - - - - - functions: - - - - - - - - - - - - - - -
 # password_validator:
 def password_validator(password):
-    if not re.search(r'[@#$%^&+=]', password):
-        return myDict[17]
-    elif not re.search(r'[A-Z]', password):
-        return myDict[18]
-    elif not re.search(r'[0-9]', password):
-        return myDict[19]
-    elif len(password) < min_pw_len:
-        return myDict[1]
-    else:
+    min_pw_len = 10
+    criteria_count = 0
+
+    if re.search(r'[@#$%^&+=]', password):
+        criteria_count += 1
+    if re.search(r'[A-Z]', password):
+        criteria_count += 1
+    if re.search(r'[0-9]', password):
+        criteria_count += 1
+    if len(password) >= min_pw_len:
+        criteria_count += 1
+
+    if criteria_count >= 3:
         return True
+    else:
+        return "Password must meet at least 3 out of 4 criteria"
+
     
 def get_values(lst, key):
     result = []
