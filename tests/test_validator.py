@@ -38,7 +38,7 @@ username = "Testing1234"  # comment this stage2
 #             print("That username does not exist. Please try again")
 #             return None
 
-def main_logic():    
+def main_logic():
     while True:
         for x in range(1, 4):
             enterTotalTimes = 3
