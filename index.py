@@ -12,7 +12,7 @@ import random
 import re
 import ast
 from datetime import datetime, timedelta
-# from dateutil import tz
+import time
 
 # used to hide password and secret question answer:
 import questionary
@@ -141,9 +141,8 @@ def send_password_change_alert(username, change_seconds):
     # Print a countdown
     while current_date < change_date:
         time_difference = change_date - current_date
-        print(f"Time left: {time_difference.seconds} seconds", end='\r')
+        print(f"Time left: {time_difference.seconds} seconds ", end='\r')
         current_date = datetime.now()
-
     # Print an alert message
     print(f"\nDear {username}, please change your password. Your reset password date is now.")
 
@@ -172,6 +171,7 @@ def menu():
         if username == username in data:
             change_date = int(input("Enter the amount in seconds that you want your reset password alert to appear: "))
             send_password_change_alert(username, change_date)
+            time.sleep(5)
             menu()
         
     elif choice=="Q" or choice=="q":
