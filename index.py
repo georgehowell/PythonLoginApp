@@ -41,7 +41,13 @@ myDict = {
     16: "Goodbye!",
     17: "Password must have at least one special character",
     18: "Password must have at least one capital letter",
-    19: "Password must contain a number"
+    19: "Password must contain a number",
+    20: "In what city were you born?",
+    21: "What is the name of your favorite pet?",
+    22: "What is your mother's maiden name?",
+    23: "What high school did you attend?",
+    24: "What was the name of your favourite teacher?",
+    25: "What was the make and model of your first car?"
 }
 valid = False
 
@@ -67,9 +73,11 @@ def password_validator(password):
     else:
         return "Password must meet at least 3 out of 4 criteria"
 
+
+
 # part 1a: store password, or, reset password:
 def reset_pw():
-    new_password = questionary.password("You need to reset your password. Enter a new one now: ", validate=password_validator).ask()
+    new_password = questionary.password("Enter a new password: ", validate=password_validator).ask()
     with open(users_csv_file, 'r') as file:
         csv_reader = csv.reader(file)
         rows = list(csv_reader)
@@ -88,14 +96,7 @@ def secret_QandA():
         action1 = (
             questionary.select(
                 "Select a security question: ",
-                choices=[
-                    "In what city were you born?",
-                    "What is the name of your favorite pet?",
-                    "What is your mother's maiden name?",
-                    "What high school did you attend?",
-                    "What was the name of your favourite teacher?",
-                    "What was the make and model of your first car?",
-                    ],
+                choices=[myDict[20],myDict[21],myDict[22],myDict[23],myDict[24],myDict[25]],
             ).ask()
             or myDict[13]
         ),
@@ -103,10 +104,21 @@ def secret_QandA():
             questionary.password("Type your answer: ").ask()
                 )
     security_question = {action1, action2}
-    return security_question
+    # return security_question
+    with open(users_csv_file, 'r') as file:
+        csv_reader = csv.reader(file)
+        rows = list(csv_reader)
+    for row in rows:
+        if row[0] == username:
+            row[4] = security_question
+        with open(users_csv_file, 'w', newline='') as file:
+            csv_writer = csv.writer(file)
+            csv_writer.writerows(rows)
+            menu()
+
 
 # part 2: write to file:
-def write_to_file():
+def write_to_file_all():
     # Open our existing CSV file in append mode
     # Create a file object for this file
     with open(users_csv_file, 'a') as f_object:
@@ -162,11 +174,9 @@ while(valid == False):
                 enterTotalTimes = 3
                 triesLeftTimes = enterTotalTimes - x
                 password = questionary.password(myDict[5]).ask()
-                
                 if password == data[username][0]:
                     menu()
 
-                    
                 if triesLeftTimes == 0:
                     anwser = data[username][3]
                     input_anwser = input("Please enter the answer to your security question: ")
@@ -228,7 +238,8 @@ while(valid == False):
 
                     # User wants to use their own password:
                     elif choice3 == "n" or choice3 == "N":
-                        password = questionary.password(myDict[5], validate=password_validator).ask() # § use fn "password_validator()" from the "Validator" class
+                         # § use fn "password_validator()" from the "Validator" class
+                        password = questionary.password(myDict[5], validate=password_validator).ask()
                         break
 
                     else:
@@ -241,14 +252,7 @@ while(valid == False):
                     action1 = (
                         questionary.select(
                             "Select a security question: ",
-                            choices=[
-                                "In what city were you born?",
-                                "What is the name of your favorite pet?",
-                                "What is your mother's maiden name?",
-                                "What high school did you attend?",
-                                "What was the name of your favourite teacher?",
-                                "What was the make and model of your first car?",
-                                ],
+                            choices=[myDict[20],myDict[21],myDict[22],myDict[23],myDict[24],myDict[25]],
                         ).ask()
                         or myDict[13]
                     ),
@@ -258,7 +262,7 @@ while(valid == False):
                 security_question = {action1, action2}
 
                 List = [username, password, firstname, lastname, security_question]
-                write_to_file()
+                write_to_file_all()
                 menu()
 
             # User doesn't want to SignUp (GoodBye)
