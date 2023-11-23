@@ -10,17 +10,16 @@ from csv import writer
 import string
 import random
 import re
-import webbrowser
 
 # used to hide password and secret question answer:
 import questionary
 
 
 # - - - - - - - -  - - - - global variables: - - - - - - - - - - - - -
-users_csv_file = 'users.csv'
+users_csv_file = 'Accounts.csv'
 #open the users.csv file, excluding the header:
 data = {i[0]:i[1:] for i in csv.reader(open(users_csv_file))}
-min_pw_len = 10
+min_pw_len = 8
 # replace error messages, input text, warning messages, and other text with dictionary values, so as to "d.r.y.""
 myDict = {
     0: "Hello ",
@@ -52,7 +51,6 @@ valid = False
 # - - - - - - - - - - - - - - functions: - - - - - - - - - - - - - - -
 # password_validator:
 def password_validator(password):
-    min_pw_len = 10
     criteria_count = 0
 
     if re.search(r'[@#$%^&+=]', password):
@@ -69,13 +67,80 @@ def password_validator(password):
     else:
         return "Password must meet at least 3 out of 4 criteria"
 
+# part 1a: store password, or, reset password:
+def reset_pw():
+    new_password = questionary.password("You need to reset your password. Enter a new one now: ", validate=password_validator).ask()
+    with open(users_csv_file, 'r') as file:
+        csv_reader = csv.reader(file)
+        rows = list(csv_reader)
+        for row in rows:
+            if row[0] == username:
+                row[1] = new_password
+    with open(users_csv_file, 'w', newline='') as file:
+        csv_writer = csv.writer(file)
+        csv_writer.writerows(rows)
+        menu()
+
     
-def get_values(lst, key):
-    result = []
-    for dictionary in lst:
-        if key in dictionary:
-            result.append(dictionary[key])
-    return result
+# part 1b: select a secret question and answer:
+def secret_QandA():
+    if __name__ == "__main__":
+        action1 = (
+            questionary.select(
+                "Select a security question: ",
+                choices=[
+                    "In what city were you born?",
+                    "What is the name of your favorite pet?",
+                    "What is your mother's maiden name?",
+                    "What high school did you attend?",
+                    "What was the name of your favourite teacher?",
+                    "What was the make and model of your first car?",
+                    ],
+            ).ask()
+            or myDict[13]
+        ),
+        action2 = (
+            questionary.password("Type your answer: ").ask()
+                )
+    security_question = {action1, action2}
+    return security_question
+
+# part 2: write to file:
+def write_to_file():
+    # Open our existing CSV file in append mode
+    # Create a file object for this file
+    with open(users_csv_file, 'a') as f_object:
+        # Pass this file object to csv.writer() and get a writer object
+        writer_object = writer(f_object)
+        # Pass the list as an argument into the writerow()
+        writer_object.writerow(List)
+        # Close the file object
+        f_object.close()
+
+
+
+# Welcome Menu:
+def menu():
+    print("************ Welcome to Gelos Software Design Website **************")
+    print()
+
+    choice = input("""
+                      A: Reset your password
+                      B: Change your secret question + anwser
+                      Q: Logout
+
+                      Please enter your choice: """)
+
+    if choice == "A" or choice =="a":
+        reset_pw()
+    elif choice == "B" or choice =="b":
+        secret_QandA()
+    elif choice=="Q" or choice=="q":
+        exit()
+    else:
+        print("You must only select either A or B")
+        print("Please try again")
+        menu()
 
 
 # - - - - - - - - - - - - - - - the code - - - - - - - - - - - - - - -
@@ -99,10 +164,9 @@ while(valid == False):
                 password = questionary.password(myDict[5]).ask()
                 
                 if password == data[username][0]:
-                    # Welcome to Gelos Software Design Website
-                    print(myDict[0] + username + myDict[6])
-                    webbrowser.open('https://georgehowell.art/gelos_python_demo/')
-                    exit()
+                    menu()
+
+                    
                 if triesLeftTimes == 0:
                     anwser = data[username][3]
                     input_anwser = input("Please enter the answer to your security question: ")
@@ -111,21 +175,8 @@ while(valid == False):
                         if char not in string.punctuation:
                             clean_answer += char
                     if (input_anwser == clean_answer):
-                        new_password = questionary.password("You need to reset your password. Enter a new one now: ", validate=password_validator).ask() # § use fn "password_validator()" from the "Validator" class
-
-                        with open(users_csv_file, 'r') as file:
-                            csv_reader = csv.reader(file)
-                            rows = list(csv_reader)
-                            for row in rows:
-                                if row[0] == username:
-                                    row[1] = new_password
-
-                        with open(users_csv_file, 'w', newline='') as file:
-                            csv_writer = csv.writer(file)
-                            csv_writer.writerows(rows)
-
-                        print(myDict[0] + username + myDict[6])
-                        exit()
+                        reset_pw()
+                        menu()
                         
                     else:
                         print("Incorrect Answer! Try again later.")
@@ -203,27 +254,12 @@ while(valid == False):
                     ),
                     action2 = (
                         questionary.password("Type your answer: ").ask()
-                )
+                            )
                 security_question = {action1, action2}
 
-
                 List = [username, password, firstname, lastname, security_question]
-                # Open our existing CSV file in append mode
-                # Create a file object for this file
-                with open(users_csv_file, 'a') as f_object:
-               
-                    # Pass this file object to csv.writer() and get a writer object
-                    writer_object = writer(f_object)
-               
-                    # Pass the list as an argument into the writerow()
-                    writer_object.writerow(List)
-               
-                    # Close the file object
-                    f_object.close()
-                # Welcome to Gelos Software Design Website
-                print(myDict[0] + firstname + myDict[6])
-                webbrowser.open('https://georgehowell.art/gelos_python_demo/')
-                exit()
+                write_to_file()
+                menu()
 
             # User doesn't want to SignUp (GoodBye)
             elif choice2 == "n" or choice2 == "N":
