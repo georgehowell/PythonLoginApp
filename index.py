@@ -104,7 +104,7 @@ def secret_QandA():
         action2 = (
             questionary.password("Type your answer: ").ask()
                 )
-    security_question = {action1, action2}
+    security_question = {action2, action1}
     # return security_question
     with open(users_csv_file, 'r') as file:
         csv_reader = csv.reader(file)
@@ -180,7 +180,6 @@ while(valid == False):
                     menu()
 
                 if triesLeftTimes == 0:
-                    input_anwser = input("Please enter the answer to your security question: ")
                     with open(users_csv_file, 'r') as file:
                         # Create a CSV reader
                         csv_reader = csv.reader(file)
@@ -189,12 +188,14 @@ while(valid == False):
                         # Read the data row
                         data_row = next(csv_reader)
                         # Extract the SecretQuestionAnswer value and convert it to a Python dictionary
-                        secret_question_answer_str = data_row[4]
+                        secret_question_answer_str = data_row[4][0:]
                         secret_question_answer_dict = ast.literal_eval(secret_question_answer_str)
                         # Extract the value
                         stored_answer = secret_question_answer_dict.pop()
-                        print(stored_answer)
-                        if(input_anwser == stored_answer):  
+                        # print(stored_answer)
+                        input_anwser = input("Please enter the answer to your security question: ")
+
+                        if input_anwser == stored_answer:
                             reset_pw()  
                         else:
                             print("Incorrect Answer! Try again later.")
@@ -267,7 +268,7 @@ while(valid == False):
                     action2 = (
                         questionary.password("Type your answer: ").ask()
                             )
-                security_question = {action1, action2}
+                security_question = {action2, action1}
 
                 List = [username, password, firstname, lastname, security_question]
                 write_to_file_all()

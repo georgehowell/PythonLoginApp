@@ -1,2 +1,3 @@
 username, password, FirstName, LastName, SecretQuestionAnswer, SecretQuestion
-foobar,Password888,Foo,Bar,"{'Sydney', ('In what city were you born?',)}"
+foobar,Password9,Foo,Bar,"{'Sydney', ('In what city were you born?',)}"
+geohow,Password888,,Howe,"{'Ben', ('What is the name of your favorite pet?',)}"
