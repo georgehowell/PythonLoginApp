@@ -84,10 +84,10 @@ def reset_pw():
         for row in rows:
             if row[0] == username:
                 row[1] = new_password
-    with open(users_csv_file, 'w', newline='') as file:
-        csv_writer = csv.writer(file)
-        csv_writer.writerows(rows)
-        menu()
+        with open(users_csv_file, 'w', newline='') as file:
+            csv_writer = csv.writer(file)
+            csv_writer.writerows(rows)
+            menu()
 
     
 # part 1b: select a secret question and answer:
@@ -111,7 +111,7 @@ def secret_QandA():
     for row in rows:
         if row[0] == username:
             row[4] = security_question
-        with open(users_csv_file, 'w', newline='') as file:
+        with open(users_csv_file, 'a', newline='') as file:
             csv_writer = csv.writer(file)
             csv_writer.writerows(rows)
             menu()
