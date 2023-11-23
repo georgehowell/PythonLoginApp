@@ -1,3 +1,2 @@
 username, password, FirstName, LastName, SecretQuestionAnswer, SecretQuestion
-FooBar,Password9,Bar,Foo,"{'Pius', ('What high school did you attend?',)}"
-FoooBar,DrD0Little,Foo,Bar,"{('In what city were you born?',), 'Sydney'}"
+foobar,Password888,Foo,Bar,"{'Sydney', ('In what city were you born?',)}"

@@ -10,6 +10,7 @@ from csv import writer
 import string
 import random
 import re
+import ast
 
 # used to hide password and secret question answer:
 import questionary
@@ -84,10 +85,10 @@ def reset_pw():
         for row in rows:
             if row[0] == username:
                 row[1] = new_password
-        with open(users_csv_file, 'w', newline='') as file:
-            csv_writer = csv.writer(file)
-            csv_writer.writerows(rows)
-            menu()
+    with open(users_csv_file, 'w', newline='') as file:
+        csv_writer = csv.writer(file)
+        csv_writer.writerows(rows)
+    menu()
 
     
 # part 1b: select a secret question and answer:
@@ -111,10 +112,10 @@ def secret_QandA():
     for row in rows:
         if row[0] == username:
             row[4] = security_question
-        with open(users_csv_file, 'a', newline='') as file:
-            csv_writer = csv.writer(file)
-            csv_writer.writerows(rows)
-            menu()
+    with open(users_csv_file, 'w', newline='') as file:
+        csv_writer = csv.writer(file)
+        csv_writer.writerows(rows)
+    menu()
 
 
 # part 2: write to file:
@@ -155,6 +156,7 @@ def menu():
         menu()
 
 
+
 # - - - - - - - - - - - - - - - the code - - - - - - - - - - - - - - -
 # 1. Login: is the user registered (Y(1) or N(1))
 while(valid == False):
@@ -173,23 +175,29 @@ while(valid == False):
             for x in range(1, 4):
                 enterTotalTimes = 3
                 triesLeftTimes = enterTotalTimes - x
-                password = questionary.password(myDict[5]).ask()
+                password = questionary.password("Please provide your password: ",).ask()
                 if password == data[username][0]:
                     menu()
 
                 if triesLeftTimes == 0:
-                    anwser = data[username][3]
                     input_anwser = input("Please enter the answer to your security question: ")
-                    clean_answer = ""
-                    for char in input_anwser:
-                        if char not in string.punctuation:
-                            clean_answer += char
-                    if (input_anwser == clean_answer):
-                        reset_pw()
-                        menu()
-                        
-                    else:
-                        print("Incorrect Answer! Try again later.")
+                    with open(users_csv_file, 'r') as file:
+                        # Create a CSV reader
+                        csv_reader = csv.reader(file)
+                        # Skip the header row
+                        header = next(csv_reader)
+                        # Read the data row
+                        data_row = next(csv_reader)
+                        # Extract the SecretQuestionAnswer value and convert it to a Python dictionary
+                        secret_question_answer_str = data_row[4]
+                        secret_question_answer_dict = ast.literal_eval(secret_question_answer_str)
+                        # Extract the value
+                        stored_answer = secret_question_answer_dict.pop()
+                        print(stored_answer)
+                        if(input_anwser == stored_answer):  
+                            reset_pw()  
+                        else:
+                            print("Incorrect Answer! Try again later.")
                 else:    
                     print("Incorrect password. You have " + str(triesLeftTimes) + " attempts left.")
 
