@@ -11,6 +11,8 @@ import string
 import random
 import re
 import ast
+from datetime import datetime, timedelta
+# from dateutil import tz
 
 # used to hide password and secret question answer:
 import questionary
@@ -75,7 +77,6 @@ def password_validator(password):
         return "Password must meet at least 3 out of 4 criteria"
 
 
-
 # part 1a: store password, or, reset password:
 def reset_pw():
     new_password = questionary.password("Enter a new password: ", validate=password_validator).ask()
@@ -131,6 +132,22 @@ def write_to_file_all():
         f_object.close()
 
 
+# reset password alert using datetime:
+def send_password_change_alert(username, change_seconds):
+    # Get the current date and time:
+    current_date = datetime.now()
+    # Calculate the future date and time when the alert should appear
+    change_date = current_date + timedelta(seconds=change_seconds)
+    # Print a countdown
+    while current_date < change_date:
+        time_difference = change_date - current_date
+        print(f"Time left: {time_difference.seconds} seconds", end='\r')
+        current_date = datetime.now()
+
+    # Print an alert message
+    print(f"\nDear {username}, please change your password. Your reset password date is now.")
+
+
 
 # Welcome Menu:
 def menu():
@@ -140,14 +157,23 @@ def menu():
     choice = input("""
                       A: Reset your password
                       B: Change your secret question + anwser
+                      C: Set a timed password reset alert
                       Q: Logout
 
                       Please enter your choice: """)
 
     if choice == "A" or choice =="a":
         reset_pw()
+        
     elif choice == "B" or choice =="b":
         secret_QandA()
+        
+    elif choice=="C" or choice=="c":
+        if username == username in data:
+            change_date = int(input("Enter the amount in seconds that you want your reset password alert to appear: "))
+            send_password_change_alert(username, change_date)
+            menu()
+        
     elif choice=="Q" or choice=="q":
         exit()
     else:
