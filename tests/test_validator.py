@@ -8,7 +8,7 @@ import csv
 import questionary
 
 
-users_csv_file = 'users.csv'
+users_csv_file = 'Accounts.csv'
 data = {i[0]:i[1:] for i in csv.reader(open(users_csv_file))}
 min_pw_len = 10
 myDict = {

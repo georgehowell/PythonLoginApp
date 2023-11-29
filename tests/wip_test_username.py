@@ -93,7 +93,7 @@ def test_main_logic(mock_user_input):
 
 
 def test_can_get_entry_from_users():
-    print("can get row from Users.csv")
+    print("can get row from Accounts.csv")
     users_database = UsersDatabase()
     
     def mock_get_row(username: str, password: str):

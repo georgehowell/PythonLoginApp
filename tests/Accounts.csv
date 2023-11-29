@@ -1,5 +1,5 @@
 username, password, FirstName, LastName, SecretQuestionAnswer, SecretQuestion
-admin,admin,Admin,Admin,"{'Sydney', ('In what city were you born?',)}"
+admin,@dm1n,Admin,Admin,"{'Sydney', ('In what city were you born?',)}"
 foobar,Password9,Foo,Bar,"{'Sydney', ('In what city were you born?',)}"
 geohow,Password888,,Howe,"{'Ben', ('What is the name of your favorite pet?',)}"
 foobar2,rqRU1B2@T,Foo,Bar,"{('In what city were you born?',), 'Sydney'}"

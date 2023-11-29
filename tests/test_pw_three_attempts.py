@@ -6,10 +6,10 @@ import string
 
 from classes.userinput import UserInput
 
-users_csv_file = './tests/testdata.csv'
+users_csv_file = 'Accounts.csv'
 data = {i[0]: i[1:] for i in csv.reader(open(users_csv_file))}
-username = "Testing123"
-password = "Testing123"
+username = "foobar"
+password = "Password9"
 
 
 def get_three_attempts():

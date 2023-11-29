@@ -17,7 +17,6 @@ import time
 # used to hide password and secret question answer:
 import questionary
 
-
 # - - - - - - - -  - - - - global variables: - - - - - - - - - - - - -
 users_csv_file = 'Accounts.csv'
 #open the users.csv file, excluding the header:
@@ -53,9 +52,6 @@ myDict = {
     25: "What was the make and model of your first car?"
 }
 valid = False
-
-# - - - - - - - - - - - - - -  classes:  - - - - - - - - - - - - - - -
-
 
 # - - - - - - - - - - - - - - functions: - - - - - - - - - - - - - - -
 # password_validator:
@@ -144,8 +140,16 @@ def send_password_change_alert(username, change_seconds):
         print(f"Time left: {time_difference.seconds} seconds ", end='\r')
         current_date = datetime.now()
     # Print an alert message
-    print(f"\nDear {username}, please change your password. Your reset password date is now.")
+    print(f"\nDear {username}, please change your password. Your reset password date is today.")
 
+
+
+# open Accounts.csv and show contents (Admin only):
+def view_accounts():
+    with open(users_csv_file, newline='') as csvfile:
+        data = csv.reader(csvfile, delimiter=' ', quotechar='|')
+        for row in data:
+            print(', '.join(row))
 
 
 # Welcome Menu:
@@ -155,7 +159,7 @@ def menu():
 
     choice = input("""
                       A: Reset your password
-                      B: Change your secret question + anwser
+                      B: Change your secret question + answer
                       C: Set a timed password reset alert
                       Q: Logout
 
@@ -173,8 +177,15 @@ def menu():
             send_password_change_alert(username, change_date)
             time.sleep(5)
             menu()
+
+    elif choice == "D" or choice =="d":
+        view_accounts()
+        time.sleep(5)
+        menu()
         
     elif choice=="Q" or choice=="q":
+        print("                      Goodbye")
+        time.sleep(2)
         exit()
     else:
         print("You must only select either A or B")
@@ -193,6 +204,7 @@ while(valid == False):
             username = input("Please provide your username: ")
             if username == username in data:
                 break
+
             else:
                 print("That username does not exist. Please try again")
                 continue
@@ -202,6 +214,12 @@ while(valid == False):
                 enterTotalTimes = 3
                 triesLeftTimes = enterTotalTimes - x
                 password = questionary.password("Please provide your password: ",).ask()
+                
+                if username == 'admin' and password == data[username][0]:
+                    print('You can press "d" to view all accounts')
+                    time.sleep(3)
+                    menu()
+
                 if password == data[username][0]:
                     menu()
 
@@ -219,9 +237,9 @@ while(valid == False):
                         # Extract the value
                         stored_answer = secret_question_answer_dict.pop()
                         # print(stored_answer)
-                        input_anwser = input("Please enter the answer to your security question: ")
+                        input_answer = input("Please enter the answer to your security question: ")
 
-                        if input_anwser == stored_answer:
+                        if input_answer == stored_answer:
                             reset_pw()  
                         else:
                             print("Incorrect Answer! Try again later.")
@@ -303,6 +321,7 @@ while(valid == False):
             # User doesn't want to SignUp (GoodBye)
             elif choice2 == "n" or choice2 == "N":
                 print("Goodbye!")
+                time.sleep(2)
                 exit()
     else:
         valid = False

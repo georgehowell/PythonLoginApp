@@ -5,7 +5,7 @@ import questionary
 import csv
 from csv import writer
 
-users_csv_file = './tests/testdata.csv'
+users_csv_file = 'Accounts.csv'
 data = {i[0]:i[1:] for i in csv.reader(open(users_csv_file))}
 
 
@@ -32,7 +32,7 @@ def get_security_question():
         security_question = {action1, action2}
 
         List = [security_question]
-        with open('../users.csv', 'a') as f_object:
+        with open('../Accounts.csv', 'a') as f_object:
             writer_object = writer(f_object)
             writer_object.writerow(List)
             f_object.close()
